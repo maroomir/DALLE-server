@@ -1,8 +1,7 @@
 Flask
 Flask-Cors
 Flask-RESTful
+flask-restx
 matplotlib
 dalle-pytorch
 tqdm
-deepspeed
-triton
