@@ -11,8 +11,8 @@ from PIL import Image
 from io import BytesIO
 
 
-def load_model(path: str):
-    model_data = torch.load(path)
+def load_model(path: str, device: str):
+    model_data = torch.load(path, map_location=device)
     # clean-up the VAE model for using VQGan at this model
     dalle_params, _, weights = model_data.pop('hparams'), model_data.pop('vae_params'), model_data.pop('weights')
     dalle_params.pop('vae', None)
@@ -35,7 +35,7 @@ def generate(text,
         device = 'cpu'
     try:
         # load the DALLE model
-        dalle = load_model(model_path)
+        dalle = load_model(model_path, device=device)
         # tokenize the input texts
         text_token = tokenizer.tokenize([text], dalle.text_seq_len).to(device)
         text_token = repeat(text_token, '() n -> b n', b=num_images)

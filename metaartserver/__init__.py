@@ -1,9 +1,9 @@
-import os
+import os.path
 import time
+from queue import Queue, Empty
 from threading import Thread
 
 from flask import Flask, jsonify, request
-from queue import Queue, Empty
 
 from metaartserver.dalle import generate
 
@@ -16,8 +16,11 @@ REQUEST_ERR_IMAGES_OVER = {'Error': f'Too Many Images requested. Request no more
 REQUEST_ERR_INVALID = {'Error': 'Invalid Request'}
 REQUEST_ERR_GENERATE = {'Error': 'Image Generate Error'}
 
+TEST_INTERNAL_SERVER = '127.0.0.1'
+TEST_INTERNAL_PORT = '5000'
 
-def work_requests_handle(queue, model_path):
+
+def dalle_requests_handle(queue, model_path):
     while True:
         batch = []
         while not (len(batch) >= REQUEST_BATCH_SIZE):
@@ -33,15 +36,16 @@ def work_requests_handle(queue, model_path):
                     req['output'] = jsonify(REQUEST_ERR_GENERATE), 500
 
 
-def create_app():
+def create_app(dalle_path: str):
     app = Flask(__name__)
     queue = Queue()
-    model_path = './16L_64HD_8H_512I_128T_cc12m_cc3m_3E.pt'
-    handler = Thread(target=work_requests_handle, args=(queue, model_path))
-    handler.start()
+    if not os.path.exists(dalle_path):
+        raise ReferenceError(f"DALL-E Model ({dalle_path}) is not exists")
+    dalle_worker = Thread(target=dalle_requests_handle, args=(queue, dalle_path))
+    dalle_worker.start()
 
-    @app.route('/generate', methods=['POST'])
-    def generate():
+    @app.route('/dalle', methods=['POST'])
+    def generate_dalle():
         if queue.qsize() > REQUEST_BATCH_SIZE:
             return jsonify(REQUEST_ERR_REQUESTS_OVER), 429
         try:
@@ -62,7 +66,7 @@ def create_app():
         return jsonify(req['output'])
 
     @app.route('/health', methods=['GET'])
-    def health_check():
+    def check_health():
         return "Health", 200
 
     return app
