@@ -28,7 +28,8 @@ def generate(text,
              num_images,
              model_path: str,
              batch_size=4,
-             thresh=0.9):
+             thresh=0.9,
+             trace=False):
     if torch.cuda.is_available():
         device = 'cuda'
     else:
@@ -39,7 +40,7 @@ def generate(text,
         # tokenize the input texts
         text_token = tokenizer.tokenize([text], dalle.text_seq_len).to(device)
         text_token = repeat(text_token, '() n -> b n', b=num_images)
-        res, outputs = [], []
+        response, outputs = [], []
         for x in tqdm(text_token.split(batch_size), desc=f'generating images for - {text_token}'):
             # generate the image with input tokens
             y = dalle.generate_images(x, filter_thres=thresh)
@@ -47,15 +48,18 @@ def generate(text,
         outputs = torch.cat(outputs)
         for i, y in tqdm(enumerate(outputs), desc='saving images'):
             # convert the output to the image with 8bit scales
-            y = numpy.moveaxis(y.detach.cpu().numpy(), 0, -1)
+            y = numpy.moveaxis(y.detach().cpu().numpy(), 0, -1)
             y = (y * 255).astype('uint8')
             image = Image.fromarray(y)
-            # encode the image to the string for the request POST
+            # encode the image to the string for the request
             buffered = BytesIO()
             image.save(buffered, format='JPEG')
             img_encode = base64.b64encode(buffered.getvalue()).decode('utf-8')
-            res.append(img_encode)
-        return res
+            response.append(img_encode)
+        if trace:
+            for i, img_encode in enumerate(response):
+                print(f'send({i}) => {img_encode}')
+        return response
     except Exception as ex:
-        print('Error occur in script generating!', ex)
-        return ex
+        print('Error occur in script generating!\n', ex)
+        raise ChildProcessError(ex)

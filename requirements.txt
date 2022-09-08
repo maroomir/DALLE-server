@@ -1,6 +1,7 @@
 Flask
 Flask-Cors
 Flask-RESTful
+flask-ngrok
 tqdm
 matplotlib
 dalle-pytorch==0.14.3
