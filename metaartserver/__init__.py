@@ -1,7 +1,6 @@
 import os.path
 
 from flask import Flask, jsonify, request
-from flask_ngrok import run_with_ngrok
 
 from metaartserver.dalle import generate
 from metaartserver.data import getter
