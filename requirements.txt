@@ -5,6 +5,7 @@ pytorch-lightning<1.7.0
 tqdm
 matplotlib
 opencv-python
+pillow<=8.4.0
 
 # REST API
 Flask
@@ -12,9 +13,13 @@ Flask-Cors
 Flask-RESTful
 
 # DALL-E
-dalle-pytorch==0.14.3
-deepspeed==0.4.2
-triton==0.4.2
+ftfy
+einops
+regex
+tokenizers
+transformers
+tqdm
+omegaconf
 
 # Mesh
 PyMCubes

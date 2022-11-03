@@ -1,3 +1,6 @@
 [submodule "nerf_pl"]
 	path = nerf_pl
 	url = https://github.com/maroomir/nerf_pl.git
+[submodule "DALLE-pytorch"]
+	path = DALLE-pytorch
+	url = https://github.com/maroomir/DALLE-pytorch.git
