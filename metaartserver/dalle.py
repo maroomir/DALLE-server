@@ -3,8 +3,8 @@ import base64
 import torch
 import numpy
 
-from dalle_pytorch.tokenizer import tokenizer
-from dalle_pytorch import DALLE, VQGanVAE
+from .dalle_net.dalle_pytorch.tokenizer import tokenizer
+from .dalle_net.dalle_pytorch import DALLE, VQGanVAE
 from einops import repeat
 from tqdm import tqdm
 from PIL import Image

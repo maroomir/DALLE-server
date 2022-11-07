@@ -1,6 +1,6 @@
-[submodule "nerf_pl"]
-	path = nerf_pl
-	url = https://github.com/maroomir/nerf_pl.git
-[submodule "DALLE-pytorch"]
-	path = DALLE-pytorch
+[submodule "metaartserver/dalle_net"]
+	path = metaartserver/dalle_net
 	url = https://github.com/maroomir/DALLE-pytorch.git
+[submodule "metaartserver/nerf_net"]
+	path = metaartserver/nerf_net
+	url = https://github.com/maroomir/nerf_pl.git

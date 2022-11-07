@@ -14,4 +14,4 @@ os.environ['FLASK_APP'] = 'metaartserver'
 if __name__ == "__main__":
     dalle_model = os.path.join(MODEL_DIR, '16L_64HD_8H_512I_128T_cc12m_cc3m_3E.pt')
     app = metaartserver.create_app(dalle_path=dalle_model, data_path=DATA_DIR)
-    app.run()
+    app.run(host='0.0.0.0')
